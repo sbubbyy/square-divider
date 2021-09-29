@@ -1,0 +1,54 @@
+import pandas as pd
+from pandas import DataFrame, Series
+import math
+import matplotlib
+%matplotlib inline
+
+while True:
+    denominator=input("Divide by:")
+    try:
+        denominator=int(denominator)
+        assert 1<denominator and denominator%1==0
+        break
+    except(ValueError,TypeError,AssertionError):
+        print("""Please input an integer greater than 1.
+        """)
+twoPower=math.log(denominator,2)
+twoPower=2**int(twoPower)
+df=pd.DataFrame({"x":[0,denominator], "y":[denominator,0]})
+ax=df.plot.line(x="x", y="y", color="white", xlim=0, ylim=0)
+if denominator!=twoPower:
+    df.plot.line(ax=ax,x="x", y="y", color="green",fontsize=0)
+    x1=0
+    aPointer=0
+    bPointer=2*denominator
+    df["horizontal"]=[0,denominator]
+    cPointer=-1
+    while cPointer!=(denominator-twoPower)*denominator/twoPower:
+        cPointer=(aPointer+bPointer)/2
+        df[str(x1)]=[cPointer,cPointer]
+        df.plot.line(ax=ax, x="horizontal",y=str(x1),color="blue",fontsize=0)
+        x1+=1
+        if cPointer==(denominator-twoPower)*denominator/twoPower:
+            df[str(x1)]=[0,cPointer]
+            df.plot.line(ax=ax, x="horizontal",y=str(x1),color="green",fontsize=0)
+        if cPointer<(denominator-twoPower)*denominator/twoPower:
+            aPointer=cPointer
+        else:
+            bPointer=cPointer
+x1=0
+df["vertical"]=[0,denominator]
+for i in range(2,denominator+1):
+    df[str(x1)]=[i,i]
+    df.plot.line(ax=ax, x=str(x1),y="vertical",color="orange",fontsize=0)
+x1=0
+twoPower*=2
+while twoPower!=1:
+    twoPower/=2
+    df[str(x1)]=[twoPower,twoPower]
+    df.plot.line(ax=ax, x=str(x1),y="vertical",color="red",fontsize=0)
+    x1+=1
+ax.get_legend().remove()
+ax.set_xlabel("")
+ax.set_ylabel("")
+
